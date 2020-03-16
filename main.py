@@ -90,7 +90,7 @@ async def publishDataChanges(period):
 
 
 loop.create_task(publishAllData(30.0))
-loop.create_task(publishDataChanges(1.0))  # usually 3.0 but Sound has no state update period
+loop.create_task(publishDataChanges(3.0))  # usually 3.0 or 1.0 if a process (like mplayer) has no state update period
 
 # May add automation
 '''

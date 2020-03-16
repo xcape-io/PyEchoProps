@@ -9,6 +9,7 @@ PropsApp extends MqttApp.
 
 from constants import *
 from MqttApp import MqttApp
+from MqttVar import MqttVar
 
 import gettext
 
@@ -32,6 +33,9 @@ class PropsApp(MqttApp):
 
         self.logger.info(_("Props started"))
 
+        self._last_echo_p = MqttVar('last_echo', str, "", logger=self._logger)
+        self._publishable.append(self._last_echo_p)
+
         if self._mqttConnected:
             try:
                 (result, mid) = self._mqttClient.publish(MQTT_DISPLAY_TOPIC, "-", qos=MQTT_DEFAULT_QoS, retain=True)
@@ -43,17 +47,12 @@ class PropsApp(MqttApp):
     # __________________________________________________________________
     def onConnect(self, client, userdata, flags, rc):
         # extend as a virtual method
-        # display message will '-' for black screen
-        if hasattr(self, '_texte'):
-            text = self._texte.value
-            if not text:
-                text = "-"
-            try:
-                (result, mid) = self._mqttClient.publish(MQTT_DISPLAY_TOPIC, text, qos=MQTT_DEFAULT_QoS, retain=True)
-            except Exception as e:
-                self._logger.error(
-                    "{0} '{1}' on {2}".format(_("MQTT API : failed to call publish() for"), text, MQTT_DISPLAY_TOPIC))
-                self._logger.debug(e)
+        self.publishMessage(self._mqttOutbox, "MESG " + "echo on")
+
+    # __________________________________________________________________
+    def onDisconnect(self, client, userdata, rc):
+        # extend as a virtual method
+        self.publishMessage(self._mqttOutbox, "MESG " + "echo off")
 
     # __________________________________________________________________
     def onMessage(self, topic, message):
@@ -61,37 +60,10 @@ class PropsApp(MqttApp):
         print(topic, message)
         if message in ["app:startup", "app:quit"]:
             super().onMessage(topic, message)
-        elif message.startswith("afficher:"):
-            text = message[9:]
-            self._texte.value = text
-            if self._mqttConnected:
-                try:
-                    (result, mid) = self._mqttClient.publish(MQTT_DISPLAY_TOPIC, text, qos=MQTT_DEFAULT_QoS,
-                                                             retain=True)
-                    self._logger.info(
-                        "{0} '{1}' (mid={2}) on {3}".format(_("Program sending message"), message, mid,
-                                                            MQTT_DISPLAY_TOPIC))
-                except Exception as e:
-                    self._logger.error(
-                        "{0} '{1}' on {2}".format(_("MQTT API : failed to call publish() for"), message,
-                                                  MQTT_DISPLAY_TOPIC))
-                    self._logger.debug(e)
-            self.publishMessage(self._mqttOutbox, "DONE " + message)
-            self.publishDataChanges()
-            self._sound.play('media/bell.wav')
-        elif message.startswith("effacer"):
-            self._texte.value = ""
-            if self._mqttConnected:
-                try:
-                    (result, mid) = self._mqttClient.publish(MQTT_DISPLAY_TOPIC, "-", qos=MQTT_DEFAULT_QoS, retain=True)
-                    self._logger.info(
-                        "{0} '{1}' (mid={2}) on {3}".format(_("Program sending message"), message, mid,
-                                                            MQTT_DISPLAY_TOPIC))
-                except Exception as e:
-                    self._logger.error(
-                        "{0} '{1}' on {2}".format(_("MQTT API : failed to call publish() for"), message,
-                                                  MQTT_DISPLAY_TOPIC))
-                    self._logger.debug(e)
+        elif message.startswith("echo:"):
+            text = message[5:]
+            self.publishMessage(self._mqttOutbox, "MESG " + "echo: " + text)
+
             self.publishMessage(self._mqttOutbox, "DONE " + message)
             self.publishDataChanges()
         else:

@@ -45,6 +45,14 @@ optional arguments:
 To switch MQTT broker, kill the program and start again with new arguments.
 
 
+## SSH relaunch commande
+The command to relaunch the props with SSH is :
+
+```bash
+$ ps aux | grep python | grep -v "grep python" | grep PyEchoProps/main.py | awk '{print $2}' | xargs kill -9 && screen -d -m python3 /home/pi/Room/Props/PyEchoProps/main.py -s %BROKER%
+```
+
+
 ## Understanding the code
 
 ### *PropsApp*
