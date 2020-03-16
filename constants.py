@@ -18,3 +18,6 @@ MQTT_DEFAULT_QoS = 1
 
 MQTT_KEEPALIVE = 15 # 15 seconds is default MQTT_KEEPALIVE in Arduino PubSubClient.h
 
+#__________________________________________________________________
+# Required by PropsApp
+BLANK_ECHO = '---'

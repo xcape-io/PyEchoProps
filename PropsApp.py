@@ -33,7 +33,7 @@ class PropsApp(MqttApp):
 
         self.logger.info(_("Props started"))
 
-        self._last_echo_p = MqttVar('last_echo', str, "", logger=self._logger)
+        self._last_echo_p = MqttVar('last_echo', str, BLANK_ECHO, logger=self._logger)
         self._publishable.append(self._last_echo_p)
 
         if self._mqttConnected:
@@ -63,7 +63,7 @@ class PropsApp(MqttApp):
         elif message.startswith("echo:"):
             text = message[5:]
             self.publishMessage(self._mqttOutbox, "MESG " + "echo: " + text)
-
+            self._last_echo_p.update(text)
             self.publishMessage(self._mqttOutbox, "DONE " + message)
             self.publishDataChanges()
         else:
