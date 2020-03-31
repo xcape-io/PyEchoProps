@@ -23,6 +23,10 @@ Edit `definitions.ini` to set MQTT topics for your Escape Room:
 app-inbox = Room/My room/Props/Raspberry Echo/inbox
 app-outbox = Room/My room/Props/Raspberry Echo/outbox
 mqtt-sub-room-scenario = Room/My room/Control/game:scenario
+;mqtt-sub-control-scenario = Room/My room/Control/game:scenario
+;mqtt-sub-control-clock-minutes=Room/My room/Control/game:clock:minutes
+;mqtt-sub-control-countdown-minutes=Room/My room/Control/game:countdown:minutes
+;mqtt-sub-control-players=Room/My room/Control/game:players
 ``` 
 
 
@@ -45,7 +49,7 @@ optional arguments:
 To switch MQTT broker, kill the program and start again with new arguments.
 
 
-## SSH relaunch commande
+## SSH relaunch command
 The command to relaunch the props from *<a href="https://xcape.io/" target="_blank">xcape.io</a>* **Room** software is :
 
 ```bash
