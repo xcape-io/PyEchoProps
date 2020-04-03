@@ -6,10 +6,6 @@ MIT License (c) Marie Faure <dev at faure dot systems>
 
 App base class with MQTT inbox/outbox using asyncio event loop.
 
-pip:
------
-$ sudo pip3 install pyaml
-
 Config:
 ----------
 - in constants.py
