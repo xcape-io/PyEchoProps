@@ -36,14 +36,6 @@ class PropsApp(MqttApp):
         self._last_echo_p = MqttVar('last_echo', str, BLANK_ECHO, logger=self._logger)
         self._publishable.append(self._last_echo_p)
 
-        if self._mqttConnected:
-            try:
-                (result, mid) = self._mqttClient.publish(MQTT_DISPLAY_TOPIC, "-", qos=MQTT_DEFAULT_QoS, retain=True)
-            except Exception as e:
-                self._logger.error(
-                    "{0} '{1}' on {2}".format(_("MQTT API : failed to call publish() for"), "-", MQTT_DISPLAY_TOPIC))
-                self._logger.debug(e)
-
     # __________________________________________________________________
     def onConnect(self, client, userdata, flags, rc):
         # extend as a virtual method
