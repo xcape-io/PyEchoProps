@@ -1,6 +1,8 @@
 ﻿# PyEcho props
 ***A connected props to echo messages to its sender.***
 
+<img src="warning.png" alt="Smiley face" height="75" width="75" align="middle"> Discontinued, prefer [PyBlinkEcho in PyProps library](https://github.com/xcape-io/PyProps/tree/master/AsyncioProp/PyBlinkEcho)
+
 [PyEcho props](https://github.com/fauresystems/PyEchoProps) is pure python application to build a Raspberry connected props for Escape Room. It can be used as a base example to hack for creating your own props. It is used in the [**Room** plugin tutorial](https://xcape.io/public/documentation/en/room/Plugintutorial.html).
 
 This props listen to MQTT messages received in its inbox and replies the message to its sender.
